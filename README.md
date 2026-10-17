@@ -4,11 +4,9 @@ A responsive ride-booking experience built with HTML, CSS, inline SVG, and vanil
 
 ## Live preview
 
-After GitHub Pages is enabled for this repository, the site will be available at:
+[Open Rideflow](https://amit-1805.github.io/rideflow-journey-demo/)
 
-`https://<your-github-username>.github.io/<repository-name>/`
-
-The included GitHub Actions workflow publishes the site from the `main` branch whenever changes are pushed. In the repository, open **Settings → Pages** and select **GitHub Actions** as the build and deployment source once.
+The site is published from the `main` branch with GitHub Pages and redeploys automatically when changes are pushed.
 
 ## Run locally
 
