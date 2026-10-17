@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8f2">
+  <meta name="description" content="Choose a demo location and follow your Rideflow journey in a playful interactive city map.">
+  <title>Rideflow — your city, in motion</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Rideflow home"><span class="brand-mark">r</span>rideflow<span class="brand-dot">.</span></a>
+    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#rides">Ride options</a><a class="nav-cta" href="#book">Plan a ride <span>↗</span></a></nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot"></span> A little more joy in every journey</p>
+        <h1>Your city,<br><span>in motion.</span></h1>
+        <p class="hero-intro">Your ride is more than a dot on a map. Watch the whole journey unfold, from the first hello to the final stop.</p>
+        <a href="#book" class="text-link">Plan your demo ride <span>↓</span></a>
+        <div class="hero-stat"><div class="avatar-stack"><i>☺</i><i>✳</i><i>☺</i></div><span>Good rides start with good people.</span></div>
+      </div>
+      <div class="booking-card" id="book">
+        <div class="card-heading"><div><p class="eyebrow">YOUR NEXT ADVENTURE</p><h2>Where to?</h2></div><span class="sparkle">✳</span></div>
+        <form id="booking-form" novalidate>
+          <label class="location-field"><span class="field-icon pickup-icon" aria-hidden="true"></span><span class="sr-only">Pickup location</span><input id="pickup" name="pickup" list="locations" placeholder="Pickup location" autocomplete="off" required value="Riverside Park"></label>
+          <button class="swap-button" id="swap-locations" type="button" aria-label="Swap pickup and destination">↕</button>
+          <label class="location-field"><span class="field-icon destination-icon" aria-hidden="true"></span><span class="sr-only">Destination</span><input id="destination" name="destination" list="locations" placeholder="Where to?" autocomplete="off" required value="Old Town Market"></label>
+          <datalist id="locations"><option value="Riverside Park"><option value="Old Town Market"><option value="Northstar Station"><option value="Sunset Beach"><option value="Garden District"></datalist>
+          <p class="form-note">Demo map · Try Riverside Park, Old Town Market, Northstar Station, Sunset Beach, or Garden District.</p>
+          <p class="form-error" id="form-error" role="alert" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Start your journey <span>↗</span></button>
+          <button class="reset-button" id="reset-journey" type="button">Reset route</button>
+        </form>
+        <div class="card-foot"><span>✦</span> Your ride, your way. Always.</div>
+      </div>
+      <span class="hero-deco deco-a">✳</span><span class="hero-deco deco-b">✿</span>
+    </section>
+
+    <section class="journey" id="how-it-works" aria-label="Your ride journey">
+      <div class="journey-heading"><p class="eyebrow">A JOURNEY IN FOUR ACTS</p><h2>From hello to <span>home.</span></h2><p>Scroll the story, or start a ride above and let the city take you along.</p></div>
+      <div class="journey-layout">
+        <div class="story-list" id="story-list">
+          <article class="story-step active" data-step="0"><span class="step-number">01</span><div><h3>Choose your corner</h3><p>Pick two familiar places from our little demo city.</p><span class="stage-label">READY WHEN YOU ARE</span></div></article>
+          <article class="story-step" data-step="1"><span class="step-number">02</span><div><h3>Your driver is on the way</h3><p>Follow the route as your ride winds through the neighborhood.</p><span class="stage-label">DRIVER APPROACHING</span></div></article>
+          <article class="story-step" data-step="2"><span class="step-number">03</span><div><h3>A quick hello</h3><p>Your driver pauses at pickup while your passenger hops aboard.</p><span class="stage-label">PICKUP COMPLETE</span></div></article>
+          <article class="story-step" data-step="3"><span class="step-number">04</span><div><h3>Enjoy the ride</h3><p>One smooth trip across town. We'll let you know when you arrive.</p><span class="stage-label">ON THE WAY</span></div></article>
+          <article class="story-step" data-step="4"><span class="step-number">05</span><div><h3>Here we are</h3><p>You're at your destination. Ready to plan another?</p><span class="stage-label">JOURNEY COMPLETE</span></div></article>
+        </div>
+        <div class="scene-wrap">
+          <div class="scene-sticky">
+            <div class="scene-topline"><span class="map-label"><span class="live-dot"></span> THE LITTLE CITY</span><span id="scene-status">Waiting for your route</span></div>
+            <svg id="city-map" class="city-map" viewBox="0 0 720 550" role="img" aria-labelledby="map-title map-desc">
+              <title id="map-title">Rideflow demo city map</title><desc id="map-desc">A green neighborhood map with a winding route, pickup and destination pins, and an animated ride vehicle.</desc>
+              <defs><pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#dce8d9" stroke-width="1"/></pattern></defs>
+              <rect width="720" height="550" fill="#f1f6ec"/><rect width="720" height="550" fill="url(#grid)" opacity=".65"/>
+              <path class="water" d="M570-10c-26 80 40 120 13 190s-92 80-58 150 20 142-7 230h220V-10z"/>
+              <path class="park" d="M50 55h172v114H50zM330 48h143v86H330zM68 350h190v145H68zM355 355h122v130H355z"/>
+              <g class="trees"><circle cx="83" cy="87" r="8"/><circle cx="120" cy="136" r="7"/><circle cx="188" cy="91" r="9"/><circle cx="362" cy="77" r="7"/><circle cx="433" cy="104" r="9"/><circle cx="102" cy="393" r="9"/><circle cx="212" cy="454" r="7"/><circle cx="401" cy="410" r="8"/></g>
+              <g class="roads"><path d="M-20 255 C120 245 175 280 260 245 S400 210 480 250 S615 278 740 230"/><path d="M275-20 C300 80 265 130 300 215 S340 320 310 390 S280 480 300 570"/><path d="M60 320 C160 305 220 335 290 320 S420 300 500 330"/><path d="M485 0 C470 96 500 146 480 228 S450 390 495 550"/></g>
+              <g class="road-lines"><path d="M-20 255 C120 245 175 280 260 245 S400 210 480 250 S615 278 740 230"/><path d="M275-20 C300 80 265 130 300 215 S340 320 310 390 S280 480 300 570"/></g>
+              <g class="buildings"><rect x="92" y="203" width="45" height="30" rx="4"/><rect x="152" y="204" width="31" height="31" rx="4"/><rect x="365" y="169" width="53" height="29" rx="4"/><rect x="365" y="224" width="38" height="34" rx="4"/><rect x="530" y="284" width="52" height="34" rx="4"/><rect x="184" y="365" width="48" height="30" rx="4"/><rect x="375" y="298" width="42" height="29" rx="4"/></g>
+              <g class="map-labels"><text x="63" y="48">RIVERSIDE PARK</text><text x="337" y="40">GARDEN DISTRICT</text><text x="81" y="338">SUNSET BEACH</text><text x="365" y="347">OLD TOWN</text><text x="522" y="215">NORTHSTAR</text></g>
+              <path id="route-shadow" d=""/><path id="route-base" d=""/><path id="route-progress" d=""/>
+              <g id="pickup-marker" class="map-pin hidden"><circle class="pin-pulse" r="23"/><path d="M0-18c-9 0-16 7-16 16 0 12 16 26 16 26S16 10 16-2C16-11 9-18 0-18z"/><circle cy="-2" r="5"/></g>
+              <g id="destination-marker" class="map-pin destination-pin hidden"><circle class="pin-pulse" r="23"/><path d="M0-18c-9 0-16 7-16 16 0 12 16 26 16 26S16 10 16-2C16-11 9-18 0-18z"/><circle cy="-2" r="5"/></g>
+              <g id="passenger" class="passenger hidden"><circle class="person-shadow" cy="18" r="12"/><path class="person-body" d="M0-5v18m0-12-9 8m9-8 9 8m-9 4-7 13m7-13 7 13"/><circle class="person-head" cy="-12" r="7"/><path id="passenger-walk" d="M0 0"/></g>
+              <g id="vehicle" class="vehicle" aria-label="Ride vehicle"><g class="vehicle-inner"><ellipse class="car-shadow" cx="0" cy="19" rx="32" ry="10"/><g class="car-body"><path d="M-31 5h5l7-15q3-6 10-6h17q7 0 11 7l7 14h5q5 1 5 6v10h-72V9q0-4 5-4z"/><path class="car-window" d="m-14-10-6 13h18v-13h-7q-3 0-5 0zm17 0v13h17l-6-12q-2-2-5-2z"/><path class="car-door" d="M-2 5v13"/><path class="headlight" d="M26 7h5v5h-6"/></g><g class="wheel wheel-left"><circle r="7"/><circle r="3"/></g><g class="wheel wheel-right"><circle r="7"/><circle r="3"/></g><circle class="driver-head" cx="8" cy="-5" r="4"/></g></g>
+              <g id="arrival-burst" class="arrival-burst hidden"><circle r="28"/><text text-anchor="middle" y="6">✦</text></g>
+            </svg>
+            <div class="map-legend"><span><i class="legend-dot pickup-legend"></i> Pickup</span><span><i class="legend-dot destination-legend"></i> Destination</span><span class="demo-tag">Illustrated demo map</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rides-section" id="rides"><div class="rides-heading"><div><p class="eyebrow">PICK YOUR PACE</p><h2>Three ways to <span>get there.</span></h2></div><p>Tap a ride to change the vehicle in your city map.</p></div>
+      <div class="ride-options" role="radiogroup" aria-label="Choose a ride">
+        <button class="ride-card" role="radio" aria-checked="false" data-ride="bike"><span class="ride-art bike-art"><svg viewBox="0 0 90 52" aria-hidden="true"><circle cx="22" cy="37" r="11"/><circle cx="68" cy="37" r="11"/><path d="m22 37 14-20 13 20H22l10-14h20l16 14M54 17h8M31 15h9"/><circle cx="38" cy="9" r="5"/><path d="M36 15l-5 10"/></svg></span><span class="ride-name">Bike</span><span class="ride-desc">A nimble city hop</span><span class="ride-price">from ₹49</span></button>
+        <button class="ride-card" role="radio" aria-checked="false" data-ride="auto"><span class="ride-art auto-art"><svg viewBox="0 0 90 52" aria-hidden="true"><path d="M16 39V21l6-13h45l8 14v17z"/><path d="M25 11v15h18V11zm23 0v15h20l-6-15z"/><circle cx="28" cy="39" r="8"/><circle cx="64" cy="39" r="8"/><path d="M12 31h66"/></svg></span><span class="ride-name">Auto</span><span class="ride-desc">A breezy little classic</span><span class="ride-price">from ₹79</span></button>
+        <button class="ride-card selected" role="radio" aria-checked="true" data-ride="car"><span class="ride-art car-art"><svg viewBox="0 0 90 52" aria-hidden="true"><path d="M14 36v-8l7-4 8-14h33l10 14 7 4v8z"/><path d="m32 13-7 12h20V13zm17 0v12h18l-8-12z"/><circle cx="28" cy="37" r="8"/><circle cx="65" cy="37" r="8"/></svg></span><span class="ride-name">Car</span><span class="ride-desc">A little room to relax</span><span class="ride-price">from ₹149</span></button>
+      </div>
+    </section>
+
+    <section class="final-cta"><div class="cta-flower">✳</div><p class="eyebrow">THE CITY IS YOURS</p><h2>Ready when<br><span>you are.</span></h2><p>Pick a place, pick your ride, and let's make a little journey of it.</p><a href="#book" class="primary-button">Plan another journey <span>↗</span></a><span class="cta-scribble">see you out there!</span></section>
+  </main>
+  <footer><a class="brand" href="#home"><span class="brand-mark">r</span>rideflow<span class="brand-dot">.</span></a><span>Made for the long way home and the short way across town.</span><span>© 2026 Rideflow demo</span></footer>
+</body>
+</html>
