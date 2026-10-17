@@ -1,0 +1,1539 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoRide | Interactive Ride Journey</title>
+
+<style>
+:root {
+  --green: #159b67;
+  --dark-green: #087849;
+  --light-green: #e9f7ee;
+  --ink: #172a22;
+  --muted: #748279;
+  --line: #e4ebe5;
+  --surface: #f6faf7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  color: var(--ink);
+  background: white;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible, input:focus-visible {
+  outline: 3px solid #7bd1a4;
+  outline-offset: 3px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 6%;
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.logo span {
+  color: var(--green);
+}
+
+.nav-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.nav-button {
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 45px;
+  padding: 70px 6%;
+  background: radial-gradient(circle at top left, #f0faf2, white 55%);
+}
+
+.eyebrow {
+  color: var(--dark-green);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+h1 {
+  margin: 18px 0;
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -3px;
+}
+
+h1 span, h2 span {
+  color: var(--green);
+}
+
+.hero-copy > p {
+  max-width: 420px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.booking-card {
+  position: relative;
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 15px 40px #173a2410;
+}
+
+.location-field {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 62px;
+}
+
+.location-symbol {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.pickup-symbol {
+  color: var(--green);
+}
+
+.destination-symbol {
+  color: #e59c3d;
+}
+
+.field-content {
+  flex: 1;
+}
+
+.field-content label {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.field-content input {
+  width: 100%;
+  padding: 3px 0;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  background: transparent;
+  font-weight: 700;
+}
+
+.field-connector {
+  height: 17px;
+  margin-left: 7px;
+  border-left: 1px dashed #a9c8b4;
+}
+
+.swap-button {
+  position: absolute;
+  top: 94px;
+  right: 22px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: white;
+  color: var(--dark-green);
+  font-size: 19px;
+}
+
+.primary-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 15px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--green);
+  color: white;
+  font-weight: 800;
+  transition: .2s;
+}
+
+.primary-button:hover {
+  background: var(--dark-green);
+  transform: translateY(-1px);
+}
+
+.primary-button:disabled {
+  cursor: wait;
+  opacity: .75;
+}
+
+.primary-button span {
+  font-size: 20px;
+}
+
+.reset-button {
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.error-message {
+  color: #c24136;
+  font-size: 12px;
+}
+
+.demo-note {
+  margin: 5px 0 0;
+  text-align: center;
+  color: #91a096;
+  font-size: 10px;
+}
+
+.map-panel {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 20px 50px #153b2410;
+}
+
+.map-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #20b978;
+  box-shadow: 0 0 0 4px #e4f8ec;
+}
+
+#stageBadge {
+  color: var(--dark-green);
+}
+
+.map-frame {
+  overflow: hidden;
+  position: relative;
+  border-radius: 15px;
+  background: #edf5eb;
+}
+
+#mapSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Orthographic overhead view: no perspective or camera tilt. */
+  transform: none;
+}
+
+.map-label {
+  fill: #87a08d;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  background: #ffffffed;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-radius: 50%;
+}
+
+.journey-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 2px 2px;
+}
+
+.status-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--light-green);
+  color: var(--dark-green);
+  font-size: 20px;
+}
+
+.status-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.status-copy strong {
+  font-size: 13px;
+}
+
+.status-copy p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.status-pill {
+  padding: 5px 8px;
+  border-radius: 20px;
+  background: #f0f3f0;
+  color: #64766b;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.section {
+  padding: 75px 6%;
+}
+
+.ride-section {
+  background: var(--surface);
+}
+
+.section-heading {
+  max-width: 650px;
+  margin: auto auto 32px;
+  text-align: center;
+}
+
+.section-heading h2, .journey-content h2, .summary-card h2 {
+  margin: 12px 0;
+  font-size: clamp(30px, 4vw, 43px);
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+}
+
+.section-heading p, .journey-content > p, .summary-card > p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.ride-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 850px;
+  margin: auto;
+}
+
+.ride-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 160px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: white;
+  text-align: left;
+  transition: .2s;
+}
+
+.ride-option:hover {
+  transform: translateY(-3px);
+}
+
+.ride-option.selected {
+  border: 2px solid var(--green);
+  background: #f3fbf6;
+}
+
+.ride-emoji {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.ride-option strong {
+  font-size: 15px;
+}
+
+.ride-option small {
+  margin-top: 5px;
+  color: var(--muted);
+}
+
+.journey-section {
+  padding: 85px 6%;
+}
+
+.journey-content {
+  max-width: 760px;
+  margin: auto;
+}
+
+.timeline {
+  display: grid;
+  gap: 13px;
+  margin-top: 28px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  transition: .25s;
+}
+
+.timeline-item.active {
+  border-color: #91d5b1;
+  background: #f2fbf5;
+}
+
+.timeline-number {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #edf5ef;
+  color: var(--dark-green);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.timeline-item h3 {
+  margin: 0 0 5px;
+  font-size: 15px;
+}
+
+.timeline-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.summary-section {
+  background: #f1f8f2;
+}
+
+.summary-card {
+  max-width: 760px;
+  margin: auto;
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid #e2eee5;
+  border-radius: 24px;
+  background: white;
+}
+
+.summary-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.summary-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.summary-details span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.summary-details strong {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 25px 6%;
+  border-top: 1px solid var(--line);
+}
+
+footer p {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .hero-copy {
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 18px 5%;
+  }
+
+  .nav-note {
+    display: none;
+  }
+
+  .hero, .section {
+    padding: 48px 5%;
+  }
+
+  h1 {
+    letter-spacing: -2px;
+  }
+
+  .booking-card {
+    padding: 18px;
+  }
+
+  .map-panel {
+    padding: 10px;
+  }
+
+  .map-heading {
+    font-size: 8px;
+  }
+
+  .map-legend {
+    right: 5px;
+    bottom: 5px;
+    gap: 7px;
+    padding: 6px;
+    font-size: 8px;
+  }
+
+  .ride-options {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .ride-option {
+    display: grid;
+    grid-template-columns: 45px 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    min-height: 85px;
+    padding: 13px;
+  }
+
+  .ride-emoji {
+    grid-row: 1 / 3;
+    margin: 0;
+  }
+
+  .summary-details {
+    grid-template-columns: 1fr;
+  }
+
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <a href="#" class="logo"><span>●</span> GoRide</a>
+  <span class="nav-note">Your city. Your ride.</span>
+  <a href="#booking" class="nav-button">Book a ride ↗</a>
+</header>
+
+<main>
+<section class="hero" id="booking">
+
+  <div class="hero-copy">
+    <span class="eyebrow">YOUR CITY, CONNECTED</span>
+    <h1>Every journey<br>starts <span>somewhere.</span></h1>
+    <p>Choose your pickup, select your destination, and watch your ride come to life.</p>
+
+    <form class="booking-card" id="bookingForm">
+      <div class="location-field">
+        <span class="location-symbol pickup-symbol">●</span>
+        <div class="field-content">
+          <label for="pickup">Pickup location</label>
+          <input id="pickup" list="locations" value="Central Park" required>
+        </div>
+      </div>
+
+      <div class="field-connector"></div>
+
+      <div class="location-field">
+        <span class="location-symbol destination-symbol">●</span>
+        <div class="field-content">
+          <label for="destination">Destination</label>
+          <input id="destination" list="locations" value="Tech Park" required>
+        </div>
+      </div>
+
+      <datalist id="locations">
+        <option value="Central Park">
+        <option value="City Mall">
+        <option value="Metro Station">
+        <option value="Tech Park">
+      </datalist>
+
+      <button type="button" class="swap-button" id="swapButton"
+        aria-label="Swap locations">↕</button>
+
+      <p id="formError" class="error-message" role="alert"></p>
+
+      <button type="submit" class="primary-button" id="startButton">
+        Start your journey <span>→</span>
+      </button>
+
+      <button type="button" class="reset-button" id="resetButton">
+        Reset journey
+      </button>
+
+      <p class="demo-note">Demo mode · Sample city locations</p>
+    </form>
+  </div>
+
+  <div class="map-panel">
+    <div class="map-heading">
+      <span><i class="live-dot"></i> LIVE JOURNEY PREVIEW</span>
+      <span id="stageBadge">READY</span>
+    </div>
+
+    <div class="map-frame">
+      <svg id="mapSvg" viewBox="0 0 900 430"
+        role="img" aria-label="Animated ride journey map">
+
+        <defs>
+          <pattern id="grid" width="30" height="30"
+            patternUnits="userSpaceOnUse">
+            <path d="M30 0H0V30" fill="none"
+              stroke="#dce8df" stroke-width="1"/>
+          </pattern>
+        </defs>
+
+        <rect width="900" height="430" fill="#eef5ec"/>
+        <rect width="900" height="430" fill="url(#grid)"/>
+
+        <!-- Aerial map blocks: flat shapes, as seen from a drone directly overhead. -->
+        <g fill="#d7ebcf" stroke="#c6dfbd" stroke-width="2">
+          <rect x="35" y="35" width="155" height="92" rx="8"/>
+          <rect x="390" y="35" width="120" height="82" rx="7"/>
+          <rect x="690" y="28" width="165" height="96" rx="8"/>
+          <rect x="35" y="306" width="140" height="82" rx="8"/>
+          <rect x="510" y="306" width="125" height="80" rx="8"/>
+          <rect x="290" y="285" width="100" height="95" rx="8"/>
+        </g>
+        <g fill="#b9d9ae" opacity=".95">
+          <circle cx="58" cy="58" r="9"/><circle cx="82" cy="82" r="10"/><circle cx="120" cy="56" r="11"/><circle cx="160" cy="100" r="10"/>
+          <circle cx="72" cy="350" r="11"/><circle cx="112" cy="370" r="9"/><circle cx="545" cy="338" r="10"/><circle cx="600" cy="362" r="11"/>
+          <circle cx="725" cy="55" r="10"/><circle cx="760" cy="95" r="11"/><circle cx="820" cy="65" r="9"/>
+        </g>
+        <g fill="#cbd8d1" stroke="#b8c9c0" stroke-width="2">
+          <rect x="250" y="145" width="55" height="45" rx="3"/>
+          <rect x="320" y="145" width="45" height="45" rx="3"/>
+          <rect x="540" y="65" width="45" height="50" rx="3"/>
+          <rect x="610" y="70" width="45" height="40" rx="3"/>
+          <rect x="770" y="170" width="50" height="45" rx="3"/>
+          <rect x="720" y="300" width="82" height="58" rx="3"/>
+          <rect x="230" y="320" width="42" height="52" rx="3"/>
+        </g>
+        <!-- Parking bays and rooftop details add scale without introducing a tilted view. -->
+        <g fill="none" stroke="#f8fbf8" stroke-width="2" opacity=".95">
+          <path d="M400 45V108 M414 45V108 M428 45V108 M442 45V108 M456 45V108 M470 45V108 M484 45V108"/>
+          <path d="M700 42H842 M700 55H842 M700 68H842 M700 81H842 M700 94H842"/>
+          <path d="M300 295V370 M315 295V370 M330 295V370 M345 295V370 M360 295V370"/>
+        </g>
+
+        <path d="M20 225H880 M210 10V420 M455 10V420 M670 10V420"
+          fill="none" stroke="#fff" stroke-width="30"
+          stroke-linecap="round"/>
+
+        <path d="M20 225H880 M210 10V420 M455 10V420 M670 10V420"
+          fill="none" stroke="#d8e2dc" stroke-width="2"
+          stroke-dasharray="10 12"/>
+
+        <path id="routeBase" d="" fill="none" stroke="#b7c9bd"
+          stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <path id="routeProgress" d="" fill="none" stroke="#159b67"
+          stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <g id="locationMarkers"></g>
+
+        <g id="passenger">
+          <circle cx="0" cy="0" r="15" fill="#f2b88c" stroke="#ffffff" stroke-width="3"/>
+          <circle cx="0" cy="0" r="7" fill="#f1a33c"/>
+          <path d="M-4 -2L0 -6L4 -2L0 5Z" fill="#fff1d8"/>
+        </g>
+
+        <g id="vehicle" transform="translate(65 265)">
+          <g id="vehicleArtwork">
+            <ellipse cx="0" cy="2" rx="31" ry="19" fill="#153a2c" opacity=".14"/>
+            <rect x="-27" y="-19" width="13" height="8" rx="3" fill="#26352f"/>
+            <rect x="14" y="-19" width="13" height="8" rx="3" fill="#26352f"/>
+            <rect x="-27" y="11" width="13" height="8" rx="3" fill="#26352f"/>
+            <rect x="14" y="11" width="13" height="8" rx="3" fill="#26352f"/>
+            <rect x="-35" y="-15" width="70" height="30" rx="10" fill="#159b67" stroke="#087849" stroke-width="2"/>
+            <rect x="-18" y="-11" width="34" height="22" rx="6" fill="#d9f4e9" stroke="#087849" stroke-width="1.5"/>
+            <path d="M-1 -10V10" stroke="#9bcdb6" stroke-width="2"/>
+            <rect x="29" y="-9" width="5" height="7" rx="2" fill="#fff1a8"/>
+            <rect x="29" y="2" width="5" height="7" rx="2" fill="#fff1a8"/>
+            <rect x="-34" y="-9" width="4" height="7" rx="2" fill="#f08a7a"/>
+            <rect x="-34" y="2" width="4" height="7" rx="2" fill="#f08a7a"/>
+          </g>
+        </g>
+
+        <text x="65" y="70" class="map-label">GREEN PARK</text>
+        <text x="700" y="410" class="map-label">CITY DISTRICT</text>
+      </svg>
+
+      <div class="map-legend">
+        <span><i class="legend-dot" style="background:#159b67"></i> Pickup</span>
+        <span><i class="legend-dot" style="background:#e69b3d"></i> Destination</span>
+      </div>
+    </div>
+
+    <div class="journey-status">
+      <div class="status-icon">↗</div>
+      <div class="status-copy">
+        <strong id="statusTitle">Ready when you are</strong>
+        <p id="statusText">Choose your locations to plan a ride.</p>
+      </div>
+      <span class="status-pill" id="statusPill">READY</span>
+    </div>
+  </div>
+</section>
+
+<section class="section ride-section" id="ride-selection">
+  <div class="section-heading">
+    <span class="eyebrow">PICK YOUR RIDE</span>
+    <h2>The right ride for <span>your day.</span></h2>
+    <p>Choose your vehicle before starting your journey.</p>
+  </div>
+
+  <div class="ride-options">
+    <button class="ride-option" data-ride="bike" aria-pressed="false">
+      <span class="ride-emoji">🏍️</span>
+      <strong>Bike</strong>
+      <small>Quick city rides</small>
+    </button>
+
+    <button class="ride-option" data-ride="auto" aria-pressed="false">
+      <span class="ride-emoji">🛺</span>
+      <strong>Auto</strong>
+      <small>Everyday comfort</small>
+    </button>
+
+    <button class="ride-option selected" data-ride="car" aria-pressed="true">
+      <span class="ride-emoji">🚗</span>
+      <strong>Car</strong>
+      <small>Room for more</small>
+    </button>
+  </div>
+</section>
+
+<section class="journey-section" id="journey">
+  <div class="journey-content">
+    <span class="eyebrow">THE JOURNEY</span>
+    <h2>From here to <span>there.</span></h2>
+    <p>Follow the ride from driver arrival to passenger pickup and destination.</p>
+
+    <div class="timeline">
+      <article class="timeline-item" data-timeline="approach">
+        <span class="timeline-number">01</span>
+        <div>
+          <h3>Driver on the way</h3>
+          <p>Your selected ride travels toward the pickup point.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item" data-timeline="pickup">
+        <span class="timeline-number">02</span>
+        <div>
+          <h3>Passenger pickup</h3>
+          <p>The passenger boards the vehicle.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item" data-timeline="travel">
+        <span class="timeline-number">03</span>
+        <div>
+          <h3>Journey in progress</h3>
+          <p>The vehicle continues toward the destination.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item" data-timeline="arrival">
+        <span class="timeline-number">04</span>
+        <div>
+          <h3>Destination reached</h3>
+          <p>Your demo journey is complete.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section summary-section" id="summary">
+  <div class="summary-card">
+    <span class="eyebrow">YOUR RIDE SUMMARY</span>
+    <h2 id="summaryTitle">Your next journey awaits.</h2>
+    <p id="summaryText">Start a demo journey to see your trip details here.</p>
+
+    <div class="summary-details">
+      <div><span>Pickup</span><strong id="summaryPickup">Central Park</strong></div>
+      <div><span>Destination</span><strong id="summaryDestination">Tech Park</strong></div>
+      <div><span>Vehicle</span><strong id="summaryVehicle">Car</strong></div>
+      <div><span>Status</span><strong id="summaryStatus">Not started</strong></div>
+    </div>
+
+    <button class="primary-button" id="planAgainButton">
+      Plan another journey <span>→</span>
+    </button>
+  </div>
+</section>
+</main>
+
+<footer>
+  <a href="#" class="logo"><span>●</span> GoRide</a>
+  <p>A front-end animation demo. No real ride is booked.</p>
+</footer>
+
+<script>
+"use strict";
+
+const locations = {
+  "Central Park": { x: 145, y: 105 },
+  "City Mall": { x: 365, y: 320 },
+  "Metro Station": { x: 590, y: 120 },
+  "Tech Park": { x: 790, y: 280 }
+};
+
+const rideNames = {
+  bike: "Bike",
+  auto: "Auto-rickshaw",
+  car: "Car"
+};
+
+const reducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+
+const $ = id => document.getElementById(id);
+
+const pickupInput = $("pickup");
+const destinationInput = $("destination");
+const bookingForm = $("bookingForm");
+const formError = $("formError");
+const routeBase = $("routeBase");
+const routeProgress = $("routeProgress");
+const vehicle = $("vehicle");
+const vehicleArtwork = $("vehicleArtwork");
+const passenger = $("passenger");
+const locationMarkers = $("locationMarkers");
+const startButton = $("startButton");
+
+const state = {
+  currentStage: "ready",
+  pickupLocation: "Central Park",
+  destinationLocation: "Tech Park",
+  selectedVehicle: "car",
+  journeyProgress: 0,
+  passengerOnboard: false,
+  journeyCompleted: false,
+  animationFrame: null,
+  passengerTimer: null,
+  routeLength: 0,
+  pickupDistance: 0
+};
+
+const messages = {
+  ready: {
+    title: "Ready when you are",
+    text: "Choose your locations to plan a ride.",
+    badge: "READY"
+  },
+  approach: {
+    title: "Your driver is on the way",
+    text: "Your ride is travelling toward the pickup location.",
+    badge: "ON THE WAY"
+  },
+  pickup: {
+    title: "Your driver has arrived",
+    text: "Your passenger is getting into the vehicle.",
+    badge: "PICKUP"
+  },
+  travel: {
+    title: "Enjoy the journey",
+    text: "Your ride is heading toward the destination.",
+    badge: "IN TRANSIT"
+  },
+  arrival: {
+    title: "You've arrived!",
+    text: "Your passenger has reached the destination.",
+    badge: "ARRIVED"
+  }
+};
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgElement(tag, attributes = {}) {
+  const element = document.createElementNS(SVG_NS, tag);
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    element.setAttribute(key, value);
+  });
+
+  return element;
+}
+
+function validLocation(value) {
+  return Object.prototype.hasOwnProperty.call(locations, value.trim());
+}
+
+function getLocation(value) {
+  return locations[value.trim()];
+}
+
+function initializeMap() {
+  selectPickupLocation(pickupInput.value);
+  selectDestination(destinationInput.value);
+  drawRoute();
+}
+
+function selectPickupLocation(value) {
+  if (!validLocation(value)) return false;
+
+  state.pickupLocation = value.trim();
+  renderMarkers();
+  updateSummary();
+
+  return true;
+}
+
+function selectDestination(value) {
+  if (!validLocation(value)) return false;
+
+  state.destinationLocation = value.trim();
+  renderMarkers();
+  updateSummary();
+
+  return true;
+}
+
+function renderMarkers() {
+  locationMarkers.replaceChildren();
+
+  [
+    {
+      name: state.pickupLocation,
+      point: getLocation(state.pickupLocation),
+      color: "#159b67",
+      label: "P"
+    },
+    {
+      name: state.destinationLocation,
+      point: getLocation(state.destinationLocation),
+      color: "#e69b3d",
+      label: "D"
+    }
+  ].forEach(marker => {
+    const group = svgElement("g", {
+      transform: `translate(${marker.point.x} ${marker.point.y})`
+    });
+
+    const halo = svgElement("circle", {
+      cx: 0, cy: 0, r: 17, fill: marker.color, opacity: ".15"
+    });
+
+    const circle = svgElement("circle", {
+      cx: 0, cy: 0, r: 11,
+      fill: marker.color,
+      stroke: "#fff",
+      "stroke-width": 3
+    });
+
+    const label = svgElement("text", {
+      x: 0, y: 4,
+      "text-anchor": "middle",
+      fill: "#fff",
+      "font-size": 10,
+      "font-weight": 800
+    });
+
+    label.textContent = marker.label;
+
+    const caption = svgElement("text", {
+      x: 0, y: 30,
+      "text-anchor": "middle",
+      fill: "#334c3e",
+      "font-size": 11,
+      "font-weight": 700
+    });
+
+    caption.textContent = marker.name;
+
+    group.append(halo, circle, label, caption);
+    locationMarkers.appendChild(group);
+  });
+}
+
+function buildRoutePath() {
+  const start = { x: 65, y: 265 };
+  const pickup = getLocation(state.pickupLocation);
+  const destination = getLocation(state.destinationLocation);
+
+  // One continuous illustrative route.
+  const middleY = Math.round((pickup.y + destination.y) / 2);
+
+  const points = [
+    start,
+    { x: 100, y: 265 },
+    { x: 100, y: pickup.y },
+    pickup,
+    { x: pickup.x, y: middleY },
+    { x: destination.x, y: middleY },
+    destination
+  ];
+
+  return points.map((point, index) =>
+    `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`
+  ).join(" ");
+}
+
+function drawRoute() {
+  const path = buildRoutePath();
+
+  routeBase.setAttribute("d", path);
+  routeProgress.setAttribute("d", path);
+
+  state.routeLength = routeBase.getTotalLength();
+
+  const pickup = getLocation(state.pickupLocation);
+  let nearestDistance = 0;
+  let nearestDifference = Infinity;
+
+  for (let d = 0; d <= state.routeLength; d += 1) {
+    const point = routeBase.getPointAtLength(d);
+    const difference = Math.hypot(
+      point.x - pickup.x,
+      point.y - pickup.y
+    );
+
+    if (difference < nearestDifference) {
+      nearestDifference = difference;
+      nearestDistance = d;
+    }
+  }
+
+  state.pickupDistance = nearestDistance;
+
+  routeProgress.style.strokeDasharray = state.routeLength;
+  routeProgress.style.strokeDashoffset = state.routeLength;
+
+  renderMarkers();
+  positionVehicle(0);
+  positionPassengerAtPickup();
+}
+
+function positionVehicle(distance) {
+  if (!state.routeLength) return;
+
+  distance = Math.max(0, Math.min(distance, state.routeLength));
+
+  const point = routeBase.getPointAtLength(distance);
+  const next = routeBase.getPointAtLength(
+    Math.min(distance + 2, state.routeLength)
+  );
+
+  const angle = Math.atan2(
+    next.y - point.y,
+    next.x - point.x
+  ) * 180 / Math.PI;
+
+  vehicle.setAttribute(
+    "transform",
+    `translate(${point.x} ${point.y}) rotate(${angle})`
+  );
+
+  state.journeyProgress = distance / state.routeLength;
+
+  routeProgress.style.strokeDashoffset =
+    state.routeLength - distance;
+}
+
+function positionPassengerAtPickup() {
+  const pickup = getLocation(state.pickupLocation);
+
+  passenger.setAttribute(
+    "transform",
+    `translate(${pickup.x + 28} ${pickup.y + 20})`
+  );
+
+  passenger.style.opacity = "1";
+}
+
+function animateVehicle(from, to, duration, callback) {
+  cancelAnimationFrame(state.animationFrame);
+
+  if (reducedMotion) {
+    positionVehicle(to);
+    callback();
+    return;
+  }
+
+  const startTime = performance.now();
+
+  function frame(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+
+    const eased = progress < .5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    positionVehicle(from + (to - from) * eased);
+
+    if (progress < 1) {
+      state.animationFrame = requestAnimationFrame(frame);
+    } else {
+      state.animationFrame = null;
+      callback();
+    }
+  }
+
+  state.animationFrame = requestAnimationFrame(frame);
+}
+
+function setStage(stage) {
+  state.currentStage = stage;
+
+  const message = messages[stage];
+
+  $("statusTitle").textContent = message.title;
+  $("statusText").textContent = message.text;
+  $("statusPill").textContent = message.badge;
+  $("stageBadge").textContent = message.badge;
+
+  document.querySelectorAll(".timeline-item").forEach(item => {
+    item.classList.toggle(
+      "active",
+      item.dataset.timeline === stage
+    );
+  });
+
+  updateSummary();
+}
+
+function handlePassengerPickup(callback) {
+  state.passengerOnboard = true;
+  setStage("pickup");
+
+  const point = getLocation(state.pickupLocation);
+
+  if (!reducedMotion) {
+    passenger.animate([
+      {
+        transform: `translate(${point.x + 28}px, ${point.y + 20}px)`
+      },
+      {
+        transform: `translate(${point.x + 18}px, ${point.y + 12}px)`
+      },
+      {
+        transform: `translate(${point.x + 8}px, ${point.y + 2}px)`
+      }
+    ], {
+      duration: 1000,
+      easing: "ease-in-out",
+      fill: "forwards"
+    });
+  }
+
+  state.passengerTimer = setTimeout(() => {
+    passenger.style.opacity = "0";
+    callback();
+  }, reducedMotion ? 50 : 1300);
+}
+
+function handleDestinationArrival() {
+  state.passengerOnboard = false;
+  state.journeyCompleted = true;
+
+  setStage("arrival");
+
+  const point = getLocation(state.destinationLocation);
+
+  passenger.setAttribute(
+    "transform",
+    `translate(${point.x + 28} ${point.y + 20})`
+  );
+
+  passenger.style.opacity = "1";
+  startButton.disabled = false;
+  startButton.innerHTML = 'Journey complete <span>✓</span>';
+
+  updateSummary();
+
+  $("summary").scrollIntoView({
+    behavior: reducedMotion ? "auto" : "smooth",
+    block: "center"
+  });
+}
+
+function startJourney() {
+  if (["approach", "pickup", "travel"].includes(state.currentStage)) {
+    return;
+  }
+
+  if (!validLocation(pickupInput.value)) {
+    formError.textContent =
+      "Select a pickup from the suggested demo locations.";
+    pickupInput.focus();
+    return;
+  }
+
+  if (!validLocation(destinationInput.value)) {
+    formError.textContent =
+      "Select a destination from the suggested demo locations.";
+    destinationInput.focus();
+    return;
+  }
+
+  if (pickupInput.value.trim() === destinationInput.value.trim()) {
+    formError.textContent =
+      "Pickup and destination must be different.";
+    destinationInput.focus();
+    return;
+  }
+
+  formError.textContent = "";
+
+  cancelAnimationFrame(state.animationFrame);
+  clearTimeout(state.passengerTimer);
+
+  selectPickupLocation(pickupInput.value);
+  selectDestination(destinationInput.value);
+  drawRoute();
+
+  state.passengerOnboard = false;
+  state.journeyCompleted = false;
+
+  startButton.disabled = true;
+  startButton.textContent = "Journey in progress…";
+
+  setStage("approach");
+
+  animateVehicle(
+    0,
+    state.pickupDistance,
+    3200,
+    () => {
+      handlePassengerPickup(() => {
+        setStage("travel");
+
+        animateVehicle(
+          state.pickupDistance,
+          state.routeLength,
+          4200,
+          handleDestinationArrival
+        );
+      });
+    }
+  );
+}
+
+function updateSummary() {
+  $("summaryPickup").textContent = state.pickupLocation;
+  $("summaryDestination").textContent = state.destinationLocation;
+  $("summaryVehicle").textContent = rideNames[state.selectedVehicle];
+
+  $("summaryStatus").textContent = state.journeyCompleted
+    ? "Completed"
+    : state.currentStage === "ready"
+      ? "Not started"
+      : "In progress";
+
+  $("summaryTitle").textContent = state.journeyCompleted
+    ? "Journey completed successfully!"
+    : "Your next journey awaits.";
+
+  $("summaryText").textContent = state.journeyCompleted
+    ? `Your ${rideNames[state.selectedVehicle].toLowerCase()} ride from ${state.pickupLocation} to ${state.destinationLocation} is complete.`
+    : "Start a demo journey to see your trip details here.";
+}
+
+function updateScrollProgress() {
+  // Scrolling does not reset or control the moving vehicle.
+  const sections = [
+    $("booking"),
+    $("ride-selection"),
+    $("journey"),
+    $("summary")
+  ];
+
+  let activeSection = sections[0];
+
+  sections.forEach(section => {
+    if (section.getBoundingClientRect().top < window.innerHeight * .55) {
+      activeSection = section;
+    }
+  });
+
+  document.querySelectorAll(".nav-button").forEach(link => {
+    link.setAttribute(
+      "aria-current",
+      link.getAttribute("href") === `#${activeSection.id}`
+        ? "location"
+        : "false"
+    );
+  });
+}
+
+function resetJourney() {
+  cancelAnimationFrame(state.animationFrame);
+  clearTimeout(state.passengerTimer);
+
+  passenger.getAnimations().forEach(animation => animation.cancel());
+
+  state.animationFrame = null;
+  state.currentStage = "ready";
+  state.journeyProgress = 0;
+  state.passengerOnboard = false;
+  state.journeyCompleted = false;
+
+  startButton.disabled = false;
+  startButton.innerHTML = 'Start your journey <span>→</span>';
+
+  formError.textContent = "";
+  passenger.style.opacity = "1";
+
+  if (!validLocation(pickupInput.value)) {
+    pickupInput.value = "Central Park";
+  }
+
+  if (!validLocation(destinationInput.value) ||
+      destinationInput.value === pickupInput.value) {
+    destinationInput.value =
+      pickupInput.value === "Tech Park" ? "City Mall" : "Tech Park";
+  }
+
+  selectPickupLocation(pickupInput.value);
+  selectDestination(destinationInput.value);
+
+  drawRoute();
+  setStage("ready");
+}
+
+function updateVehicleArtwork(ride) {
+  const drawings = {
+    car: `
+      <ellipse cx="0" cy="2" rx="31" ry="19" fill="#153a2c" opacity=".14"/>
+      <rect x="-27" y="-19" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="14" y="-19" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="-27" y="11" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="14" y="11" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="-35" y="-15" width="70" height="30" rx="10" fill="#159b67" stroke="#087849" stroke-width="2"/>
+      <rect x="-18" y="-11" width="34" height="22" rx="6" fill="#d9f4e9" stroke="#087849" stroke-width="1.5"/>
+      <path d="M-1 -10V10" stroke="#9bcdb6" stroke-width="2"/>
+      <rect x="29" y="-9" width="5" height="7" rx="2" fill="#fff1a8"/><rect x="29" y="2" width="5" height="7" rx="2" fill="#fff1a8"/>
+      <rect x="-34" y="-9" width="4" height="7" rx="2" fill="#f08a7a"/><rect x="-34" y="2" width="4" height="7" rx="2" fill="#f08a7a"/>
+    `,
+    bike: `
+      <ellipse cx="0" cy="1" rx="24" ry="13" fill="#153a2c" opacity=".14"/>
+      <circle cx="-22" cy="0" r="9" fill="#26352f" stroke="#b9c7c0" stroke-width="3"/>
+      <circle cx="22" cy="0" r="9" fill="#26352f" stroke="#b9c7c0" stroke-width="3"/>
+      <path d="M-17 0L-5 -7L8 -5L17 0L7 6L-7 6Z" fill="#159b67" stroke="#087849" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="-6" y="-5" width="12" height="10" rx="4" fill="#26352f"/>
+      <circle cx="2" cy="0" r="5" fill="#e8b18a" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="29" cy="0" r="3" fill="#fff1a8"/>
+    `,
+    auto: `
+      <ellipse cx="0" cy="2" rx="32" ry="18" fill="#153a2c" opacity=".14"/>
+      <rect x="-27" y="-18" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="14" y="-18" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="-27" y="10" width="13" height="8" rx="3" fill="#26352f"/>
+      <rect x="14" y="10" width="13" height="8" rx="3" fill="#26352f"/>
+      <path d="M-32 -13Q-32 -17 -25 -17H22Q32 -17 32 -8V9Q32 15 24 15H-24Q-32 15 -32 8Z" fill="#f2b53d" stroke="#a97516" stroke-width="2"/>
+      <rect x="-16" y="-11" width="30" height="22" rx="5" fill="#d9f4e9" stroke="#a97516" stroke-width="1.5"/>
+      <path d="M-1 -10V10" stroke="#b8d9cb" stroke-width="2"/>
+      <rect x="26" y="-8" width="4" height="6" rx="2" fill="#fff1a8"/><rect x="26" y="2" width="4" height="6" rx="2" fill="#fff1a8"/>
+    `
+  };
+
+  vehicleArtwork.innerHTML = drawings[ride];
+}
+
+function chooseRide(ride) {
+  if (!rideNames[ride]) return;
+
+  if (["approach", "pickup", "travel"].includes(state.currentStage)) {
+    return;
+  }
+
+  state.selectedVehicle = ride;
+
+  document.querySelectorAll(".ride-option").forEach(option => {
+    const selected = option.dataset.ride === ride;
+
+    option.classList.toggle("selected", selected);
+    option.setAttribute("aria-pressed", String(selected));
+  });
+
+  updateVehicleArtwork(ride);
+  updateSummary();
+  positionVehicle(0);
+}
+
+// Events
+bookingForm.addEventListener("submit", event => {
+  event.preventDefault();
+  startJourney();
+});
+
+$("swapButton").addEventListener("click", () => {
+  const oldPickup = pickupInput.value;
+
+  pickupInput.value = destinationInput.value;
+  destinationInput.value = oldPickup;
+
+  formError.textContent = "";
+
+  if (validLocation(pickupInput.value) &&
+      validLocation(destinationInput.value) &&
+      pickupInput.value !== destinationInput.value) {
+    selectPickupLocation(pickupInput.value);
+    selectDestination(destinationInput.value);
+    drawRoute();
+  }
+});
+
+$("resetButton").addEventListener("click", resetJourney);
+
+$("planAgainButton").addEventListener("click", () => {
+  resetJourney();
+
+  $("booking").scrollIntoView({
+    behavior: reducedMotion ? "auto" : "smooth"
+  });
+});
+
+document.querySelectorAll(".ride-option").forEach(option => {
+  option.addEventListener("click", () => {
+    chooseRide(option.dataset.ride);
+  });
+});
+
+[pickupInput, destinationInput].forEach(input => {
+  input.addEventListener("change", () => {
+    formError.textContent = "";
+
+    if (state.currentStage !== "ready") {
+      resetJourney();
+    }
+
+    if (validLocation(pickupInput.value) &&
+        validLocation(destinationInput.value) &&
+        pickupInput.value !== destinationInput.value) {
+      selectPickupLocation(pickupInput.value);
+      selectDestination(destinationInput.value);
+      drawRoute();
+    }
+  });
+});
+
+window.addEventListener("scroll", updateScrollProgress, { passive: true });
+
+// Start the demo.
+initializeMap();
+setStage("ready");
+updateSummary();
+updateScrollProgress();
+</script>
+</body>
+</html>
