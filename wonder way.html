@@ -1,0 +1,1581 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WanderWay — The Journey Is Yours</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --green: #176b45;
+  --lime: #c4ef85;
+  --ink: #17291f;
+  --cream: #f7f7ef;
+  --road: #414844;
+  --road-edge: #d9d8c9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: auto;
+  scroll-padding-top: 78px;
+}
+
+body {
+  font-family: Poppins, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+
+header {
+  position: fixed;
+  z-index: 1000;
+  inset: 0 0 auto;
+  background: #ffffffed;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 3px 22px #0000000c;
+  padding: 13px 5%;
+}
+
+.navbar {
+  max-width: 1240px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.logo span { color: #e59c35; }
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.nav-links a {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+
+.nav-links a:hover,
+.nav-links a.active { color: var(--green); }
+
+.nav-links a.active { border-bottom: 2px solid var(--green); }
+
+.menu-toggle {
+  display: none;
+  border: 0;
+  background: var(--green);
+  color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+section {
+  position: relative;
+  min-height: 100vh;
+  padding: 120px 7% 82px;
+  scroll-margin-top: 70px;
+  overflow: clip;
+  background: var(--cream);
+}
+
+/* Keep the SVG road above section backgrounds but below section content. */
+.section-inner {
+  max-width: 1160px;
+  margin: auto;
+  position: relative;
+  z-index: 4;
+}
+
+.eyebrow {
+  display: inline-block;
+  background: #e2f1d9;
+  color: var(--green);
+  border-radius: 30px;
+  padding: 7px 14px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 17px;
+}
+
+h1, h2, h3 { line-height: 1.2; }
+
+.section-title {
+  font-size: clamp(32px, 4vw, 52px);
+  letter-spacing: -1.3px;
+  margin-bottom: 17px;
+}
+
+.section-description {
+  color: #68756b;
+  line-height: 1.85;
+  font-size: 14px;
+  max-width: 660px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 22px;
+  background: var(--green);
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  transition: transform .2s, background .2s;
+  cursor: pointer;
+}
+
+.btn:hover { transform: translateY(-2px); background: #105437; }
+
+.btn-light {
+  background: white;
+  color: var(--green);
+  border: 1px solid #dce5dc;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 27px;
+}
+
+#home {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(120deg, #e5f1dc, #fff8e8 58%, #cfe5c9);
+  min-height: 100svh;
+}
+
+#home .section-inner {
+  width: 100%;
+  padding-left: 65px;
+}
+
+.hero-copy { max-width: 610px; padding: 35px 0; }
+
+.hero-copy h1 {
+  font-size: clamp(43px, 6.4vw, 80px);
+  letter-spacing: -3px;
+  margin-bottom: 23px;
+}
+
+.hero-copy h1 span { color: var(--green); }
+
+.hero-copy p {
+  max-width: 500px;
+  color: #5c6e61;
+  line-height: 1.9;
+  font-size: 15px;
+}
+
+.hero-note { margin-top: 30px; color: #617467; font-size: 12px; }
+
+.landscape {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hill {
+  position: absolute;
+  width: 46vw;
+  height: 30vw;
+  border-radius: 50%;
+  background: #d5e4c7;
+  opacity: .7;
+}
+
+.hill.h1 { bottom: -18vw; left: -12vw; }
+.hill.h2 { bottom: -19vw; right: -10vw; background: #bfd8b3; }
+
+.tree {
+  position: absolute;
+  font-size: clamp(25px, 4vw, 48px);
+  opacity: .55;
+}
+
+.t1 { left: 7%; bottom: 15%; }
+.t2 { right: 8%; bottom: 20%; }
+.t3 { left: 24%; bottom: 30%; font-size: 30px; }
+.t4 { right: 23%; bottom: 37%; font-size: 32px; }
+
+/* ROAD LAYER */
+
+#journey-world {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+#roadSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.road-shadow {
+  fill: none;
+  stroke: #17251b;
+  stroke-width: 48;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .12;
+}
+
+.road-edge {
+  fill: none;
+  stroke: var(--road-edge);
+  stroke-width: 40;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.road-surface {
+  fill: none;
+  stroke: var(--road);
+  stroke-width: 32;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.road-center {
+  fill: none;
+  stroke: #f5f1d7;
+  stroke-width: 2;
+  stroke-dasharray: 12 12;
+  stroke-linecap: round;
+}
+
+.road-marker {
+  fill: white;
+  stroke: var(--green);
+  stroke-width: 3;
+}
+
+.road-marker-text {
+  font: 700 12px Poppins, Arial, sans-serif;
+  fill: var(--green);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+#car {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 42px;
+  height: 72px;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  z-index: 8;
+  will-change: left, top, transform;
+  filter: drop-shadow(0 7px 5px #0004);
+}
+
+.car-shell {
+  position: absolute;
+  inset: 3px 5px 4px;
+  border-radius: 13px 13px 9px 9px;
+  background: linear-gradient(90deg, #b73527, #f05a40 30%, #df4332 75%, #a92f24);
+  border: 2px solid #a32c23;
+  box-shadow: inset 0 -8px #bf382a;
+}
+
+.car-glass {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 15px;
+  height: 17px;
+  border-radius: 5px;
+  background: #b9e2e8;
+  border: 2px solid #f5f4e9;
+}
+
+.car-rear-glass {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 12px;
+  height: 9px;
+  border-radius: 3px;
+  background: #b9e2e8;
+  border: 1px solid white;
+}
+
+.wheel {
+  position: absolute;
+  width: 7px;
+  height: 15px;
+  background: #171b1a;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.wl { left: 0; }
+.wr { right: 0; }
+.wt { top: 15px; }
+.wb { bottom: 14px; }
+
+.lamp {
+  position: absolute;
+  top: 2px;
+  width: 7px;
+  height: 4px;
+  background: #fff4ac;
+  border-radius: 3px;
+  box-shadow: 0 0 8px #fff2a9;
+}
+
+.ll { left: 7px; }
+.lr { right: 7px; }
+
+.car-label {
+  position: absolute;
+  background: white;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: 8px;
+  padding: 7px 10px;
+  box-shadow: 0 4px 18px #0002;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity .25s;
+}
+
+.car-label.show { opacity: 1; }
+
+/* SECTIONS SLIDE IN WHEN THE CAR ARRIVES */
+
+body.journey-ready section .section-inner {
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 850ms cubic-bezier(.22, 1, .36, 1),
+    opacity 650ms ease;
+  will-change: transform, opacity;
+}
+
+body.journey-ready section.from-left .section-inner {
+  transform: translate3d(-70px, 0, 0);
+}
+
+body.journey-ready section.from-right .section-inner {
+  transform: translate3d(70px, 0, 0);
+}
+
+body.journey-ready section.section-arrived .section-inner {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* CARDS */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 35px;
+}
+
+.destination-card, .package-card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px #173c2410;
+  transition: transform .25s;
+}
+
+.destination-card:hover, .package-card:hover {
+  transform: translateY(-6px);
+}
+
+.destination-image {
+  height: 205px;
+  background-size: cover;
+  background-position: center;
+}
+
+.destination-info { padding: 21px; }
+.destination-info h3 { font-size: 19px; margin-bottom: 9px; }
+
+.destination-info p {
+  font-size: 12px;
+  color: #778077;
+  line-height: 1.8;
+  margin-bottom: 13px;
+}
+
+.destination-info a {
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 700;
+}
+
+#destinations { background: #f7f7ef; }
+#packages { background: #eaf2e3; }
+
+.package-card { padding: 25px; }
+.package-card h3 { font-size: 21px; margin-bottom: 8px; }
+
+.package-card .price {
+  font-size: 26px;
+  color: var(--green);
+  font-weight: 800;
+  margin: 17px 0;
+}
+
+.package-card .price small {
+  font-size: 10px;
+  color: #788277;
+  font-weight: 400;
+}
+
+.package-card ul {
+  list-style: none;
+  color: #68756b;
+  font-size: 12px;
+  line-height: 2.4;
+  margin: 16px 0 22px;
+}
+
+.package-card li::before {
+  content: "✓ ";
+  font-weight: 800;
+  color: var(--green);
+}
+
+#experiences { background: #fffdf5; }
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 35px;
+}
+
+.experience {
+  padding: 27px;
+  background: #edf4e6;
+  border-radius: 17px;
+  transition: transform .25s;
+}
+
+.experience:hover { transform: translateY(-5px); }
+.emoji { font-size: 34px; margin-bottom: 14px; }
+.experience h3 { font-size: 17px; margin-bottom: 9px; }
+.experience p { font-size: 12px; color: #68756b; line-height: 1.8; }
+
+#gallery { background: #173d2b; color: white; }
+#gallery .section-description { color: #d1e0d3; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-rows: 180px 180px;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.gallery-item {
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  transition: transform .25s;
+}
+
+.gallery-item:hover { transform: scale(1.015); }
+.gallery-item:first-child { grid-row: span 2; }
+
+#about { background: #e6f0df; }
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 45px;
+}
+
+.about-visual {
+  min-height: 350px;
+  border-radius: 22px;
+  background:
+    linear-gradient(#173d2b15, #173d2b45),
+    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=85')
+    center/cover;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.stat { padding: 13px; background: #ffffffb8; border-radius: 11px; }
+.stat strong { display: block; font-size: 22px; color: var(--green); }
+.stat span { font-size: 10px; color: #657268; }
+
+#contact { background: #fffdf5; }
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 42px;
+  margin-top: 32px;
+}
+
+.contact-details p {
+  font-size: 13px;
+  line-height: 2;
+  color: #68756b;
+  margin: 12px 0;
+}
+
+.contact-form {
+  background: #f0f4eb;
+  border-radius: 18px;
+  padding: 27px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.contact-form label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  border: 1px solid #d8e0d4;
+  border-radius: 8px;
+  background: white;
+  padding: 12px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  border-color: var(--green);
+}
+
+.contact-form textarea { min-height: 95px; resize: vertical; }
+
+footer {
+  background: #102b1e;
+  color: #d4e4d8;
+  text-align: center;
+  padding: 25px 15px;
+  font-size: 11px;
+  position: relative;
+  z-index: 4;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .65s, transform .65s;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 10px; }
+
+  .cards, .experience-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-layout, .contact-layout { grid-template-columns: 1fr; }
+  .about-visual { min-height: 270px; }
+
+  .road-shadow { stroke-width: 36; }
+  .road-edge { stroke-width: 29; }
+  .road-surface { stroke-width: 22; }
+}
+
+@media (max-width: 650px) {
+  header { padding: 12px 5%; }
+  .logo { font-size: 21px; }
+  .menu-toggle { display: block; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 12px 6% 20px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    box-shadow: 0 12px 20px #0001;
+  }
+
+  .nav-links.open { display: flex; }
+  .nav-links a { display: block; padding: 10px 0; font-size: 13px; }
+  .nav-links a.active { border-bottom: 0; }
+
+  section { padding: 105px 6% 62px; }
+
+  #home .section-inner {
+    padding-left: 0;
+    padding-right: 30px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(41px, 11vw, 62px);
+    letter-spacing: -1.7px;
+  }
+
+  .hero-copy p { font-size: 13px; }
+
+  .cards, .experience-grid { grid-template-columns: 1fr; }
+  .destination-image { height: 220px; }
+
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 170px 140px 140px;
+  }
+
+  .gallery-item:first-child {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .stats { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .contact-form { padding: 19px; }
+
+  .road-shadow { stroke-width: 25; }
+  .road-edge { stroke-width: 20; }
+  .road-surface { stroke-width: 15; }
+  .road-center { stroke-width: 1.5; stroke-dasharray: 8 10; }
+
+  body.journey-ready section.from-left .section-inner {
+    transform: translate3d(-35px, 0, 0);
+  }
+
+  body.journey-ready section.from-right .section-inner {
+    transform: translate3d(35px, 0, 0);
+  }
+
+  .about-visual { min-height: 230px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.journey-ready section .section-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <nav class="navbar" aria-label="Main navigation">
+    <a class="logo" href="#home">Wander<span>Way.</span></a>
+
+    <button class="menu-toggle" id="menuToggle"
+      aria-label="Toggle navigation" aria-expanded="false">☰</button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#destinations">Destinations</a></li>
+      <li><a href="#packages">Packages</a></li>
+      <li><a href="#experiences">Experiences</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div id="journey-world" aria-hidden="true">
+  <svg id="roadSvg" xmlns="http://www.w3.org/2000/svg"
+       preserveAspectRatio="none">
+    <path id="roadShadow" class="road-shadow" d=""></path>
+    <path id="roadEdge" class="road-edge" d=""></path>
+    <path id="roadSurface" class="road-surface" d=""></path>
+    <path id="roadCenter" class="road-center" d=""></path>
+    <g id="roadMarkers"></g>
+  </svg>
+
+  <div id="car">
+    <div class="wheel wl wt"></div>
+    <div class="wheel wr wt"></div>
+    <div class="wheel wl wb"></div>
+    <div class="wheel wr wb"></div>
+    <div class="car-shell"></div>
+    <div class="car-glass"></div>
+    <div class="car-rear-glass"></div>
+    <div class="lamp ll"></div>
+    <div class="lamp lr"></div>
+  </div>
+
+  <div class="car-label" id="carLabel">Start your journey</div>
+</div>
+
+<section id="home">
+  <div class="landscape">
+    <div class="hill h1"></div>
+    <div class="hill h2"></div>
+    <span class="tree t1">🌲</span>
+    <span class="tree t2">🌳</span>
+    <span class="tree t3">🌲</span>
+    <span class="tree t4">🌳</span>
+  </div>
+
+  <div class="section-inner">
+    <div class="hero-copy reveal">
+      <span class="eyebrow">✦ Your next adventure awaits</span>
+      <h1>Life is short.<br>Take the <span>scenic route.</span></h1>
+      <p>Discover breathtaking destinations, unforgettable road trips, and extraordinary experiences. Your next great story starts here.</p>
+
+      <div class="hero-buttons">
+        <a class="btn" href="#destinations">Explore Destinations ↗</a>
+        <a class="btn btn-light" href="#packages">View Packages</a>
+      </div>
+
+      <div class="hero-note">✈ Discover more &nbsp; · &nbsp; 🚗 Travel freely &nbsp; · &nbsp; ♥ Make memories</div>
+    </div>
+  </div>
+</section>
+
+<section id="destinations">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="eyebrow">Explore the world</span>
+      <h2 class="section-title">Find your happy place.</h2>
+      <p class="section-description">From peaceful mountains to sunny beaches, find the destination that speaks to your soul.</p>
+    </div>
+
+    <div class="cards">
+      <article class="destination-card reveal">
+        <div class="destination-image" style="background-image:url('https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="destination-info">
+          <h3>Manali, Himachal</h3>
+          <p>Snow-covered peaks, pine forests, and refreshing mountain air.</p>
+          <a href="#packages">Explore Manali →</a>
+        </div>
+      </article>
+
+      <article class="destination-card reveal">
+        <div class="destination-image" style="background-image:url('https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="destination-info">
+          <h3>Goa, India</h3>
+          <p>Golden beaches, coastal sunsets, and a laid-back escape.</p>
+          <a href="#packages">Explore Goa →</a>
+        </div>
+      </article>
+
+      <article class="destination-card reveal">
+        <div class="destination-image" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="destination-info">
+          <h3>Ladakh, India</h3>
+          <p>Epic mountain roads, dramatic valleys, and open skies.</p>
+          <a href="#packages">Explore Ladakh →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="packages">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="eyebrow">Travel made easy</span>
+      <h2 class="section-title">Trips worth remembering.</h2>
+      <p class="section-description">Sample packages for your next getaway. Contact us for availability and a personalized quote.</p>
+    </div>
+
+    <div class="cards">
+      <article class="package-card reveal">
+        <span class="eyebrow">Mountain escape</span>
+        <h3>Manali Adventure</h3>
+        <p class="section-description">4 days · 3 nights</p>
+        <div class="price">₹8,999 <small>/ person · sample price</small></div>
+        <ul>
+          <li>Hotel accommodation</li>
+          <li>Local sightseeing</li>
+          <li>Mountain adventure options</li>
+          <li>Trip planning assistance</li>
+        </ul>
+        <a href="#contact" class="btn">Enquire Now</a>
+      </article>
+
+      <article class="package-card reveal">
+        <span class="eyebrow">Beach escape</span>
+        <h3>Goa Getaway</h3>
+        <p class="section-description">3 days · 2 nights</p>
+        <div class="price">₹6,499 <small>/ person · sample price</small></div>
+        <ul>
+          <li>Stay near popular beaches</li>
+          <li>North Goa sightseeing</li>
+          <li>Sunset spots and free time</li>
+          <li>Trip planning assistance</li>
+        </ul>
+        <a href="#contact" class="btn">Enquire Now</a>
+      </article>
+
+      <article class="package-card reveal">
+        <span class="eyebrow">Road trip</span>
+        <h3>Ladakh Explorer</h3>
+        <p class="section-description">6 days · 5 nights</p>
+        <div class="price">₹14,999 <small>/ person · sample price</small></div>
+        <ul>
+          <li>Scenic road trip itinerary</li>
+          <li>Mountain landscape stops</li>
+          <li>Accommodation planning</li>
+          <li>Travel guidance</li>
+        </ul>
+        <a href="#contact" class="btn">Enquire Now</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="experiences">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="eyebrow">Travel your way</span>
+      <h2 class="section-title">Every journey tells a story.</h2>
+      <p class="section-description">Choose the kind of adventure that makes you feel alive.</p>
+    </div>
+
+    <div class="experience-grid">
+      <article class="experience reveal"><div class="emoji">🏔️</div><h3>Mountain Escapes</h3><p>Find peaceful trails, beautiful valleys, and fresh mountain air.</p></article>
+      <article class="experience reveal"><div class="emoji">🚙</div><h3>Road Trips</h3><p>Enjoy open roads, spontaneous stops, and memorable drives.</p></article>
+      <article class="experience reveal"><div class="emoji">🏖️</div><h3>Beach Holidays</h3><p>Slow down beside the sea and watch the sunset.</p></article>
+      <article class="experience reveal"><div class="emoji">⛺</div><h3>Camping</h3><p>Sleep under the stars and reconnect with nature.</p></article>
+      <article class="experience reveal"><div class="emoji">🛕</div><h3>Cultural Tours</h3><p>Explore local traditions, historic places, and regional cuisine.</p></article>
+      <article class="experience reveal"><div class="emoji">📸</div><h3>Hidden Gems</h3><p>Discover beautiful places away from the usual tourist routes.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="eyebrow">Moments from the road</span>
+      <h2 class="section-title">Inspiration for your next trip.</h2>
+      <p class="section-description">Beautiful places, open roads, and memories waiting to happen.</p>
+    </div>
+
+    <div class="gallery-grid reveal">
+      <div class="gallery-item" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80')"></div>
+      <div class="gallery-item" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=700&q=80')"></div>
+      <div class="gallery-item" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=700&q=80')"></div>
+      <div class="gallery-item" style="background-image:url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=700&q=80')"></div>
+      <div class="gallery-item" style="background-image:url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=700&q=80')"></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-inner about-layout">
+    <div class="about-visual reveal" role="img" aria-label="Beautiful mountain scenery"></div>
+
+    <div class="reveal">
+      <span class="eyebrow">The WanderWay story</span>
+      <h2 class="section-title">The journey matters just as much.</h2>
+      <p class="section-description">WanderWay is a travel website concept for curious explorers. We believe travel should be simple to plan, exciting to experience, and full of moments worth remembering.</p>
+      <p class="section-description" style="margin-top:13px">Tell us what you want to discover, and let's start planning your next adventure.</p>
+
+      <div class="stats">
+        <div class="stat"><strong>50+</strong><span>Destinations*</span></div>
+        <div class="stat"><strong>1K+</strong><span>Happy travellers*</span></div>
+        <div class="stat"><strong>24/7</strong><span>Enquiry access</span></div>
+      </div>
+
+      <p style="font-size:10px;color:#788077;margin-top:8px">*Illustrative demo figures; replace with verified business data.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="eyebrow">Let's plan your next escape</span>
+      <h2 class="section-title">Where do you want to go?</h2>
+      <p class="section-description">Share your travel plans and get ready for your next adventure.</p>
+    </div>
+
+    <div class="contact-layout">
+      <div class="contact-details reveal">
+        <h3>Let's talk travel.</h3>
+        <p>📍 Pune, Maharashtra, India</p>
+        <p>✉ hello@wanderway.example</p>
+        <p>🕒 Enquiries welcome anytime</p>
+        <p>Whether you dream of a mountain escape, a relaxing beach holiday, or a long road trip, start by telling us about it.</p>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm">
+        <div class="form-row">
+          <div>
+            <label for="name">Full Name</label>
+            <input id="name" name="name" required maxlength="80" placeholder="Your name">
+          </div>
+          <div>
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="email" required maxlength="120" placeholder="you@example.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" pattern="[0-9 +()-]{7,20}" maxlength="20" placeholder="Your contact number">
+          </div>
+          <div>
+            <label for="destination">Preferred Destination</label>
+            <select id="destination" name="destination" required>
+              <option value="">Choose destination</option>
+              <option>Manali</option>
+              <option>Goa</option>
+              <option>Ladakh</option>
+              <option>Kerala</option>
+              <option>Kashmir</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="message">Tell Us About Your Trip</label>
+        <textarea id="message" name="message" required maxlength="1000" placeholder="Travel dates, number of people, budget..."></textarea>
+
+        <button class="btn" type="submit">Send Enquiry ↗</button>
+        <p id="formStatus" role="status" style="margin-top:12px;font-size:12px"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="year"></span> WanderWay Travels. Made for the love of travel.</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  const world = $("journey-world");
+  const svg = $("roadSvg");
+  const roadSurface = $("roadSurface");
+  const roadPaths = [
+    $("roadShadow"),
+    $("roadEdge"),
+    $("roadSurface"),
+    $("roadCenter")
+  ];
+
+  const markers = $("roadMarkers");
+  const car = $("car");
+  const label = $("carLabel");
+  const header = document.querySelector("header");
+  const nav = $("navLinks");
+  const menuToggle = $("menuToggle");
+
+  const sections = [...document.querySelectorAll("body > section")];
+  const navLinks = [...document.querySelectorAll(".nav-links a")];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const names = {
+    home: "Start your journey",
+    destinations: "Destinations",
+    packages: "Tour packages",
+    experiences: "Experiences",
+    gallery: "Travel gallery",
+    about: "About us",
+    contact: "Contact"
+  };
+
+  let points = [];
+  let sectionDistances = {};
+  let currentDistance = 0;
+  let activeId = "home";
+  let navigationToken = 0;
+  let animationFrame = 0;
+  let scrollFrame = 0;
+  let resizeTimer = 0;
+  let isNavigating = false;
+
+  $("year").textContent = new Date().getFullYear();
+
+  /* Assign alternating slide-in directions to each section. */
+  function prepareSectionAnimations(initialId) {
+    document.body.classList.add("journey-ready");
+
+    sections.forEach((section, index) => {
+      section.classList.remove(
+        "from-left",
+        "from-right",
+        "section-arrived"
+      );
+
+      if (index > 0) {
+        section.classList.add(
+          index % 2 === 1 ? "from-right" : "from-left"
+        );
+      }
+
+      if (section.id === initialId) {
+        section.classList.add("section-arrived");
+      }
+    });
+  }
+
+  /* Build a road along alternating screen edges. */
+  function buildRoad() {
+    const width = document.documentElement.clientWidth;
+    const height = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight,
+      window.innerHeight
+    );
+
+    const mobile = width <= 650;
+    const leftX = mobile ? 19 : 43;
+    const rightX = mobile ? width - 19 : width - 43;
+
+    const stationYs = sections.map(section => {
+      const rect = section.getBoundingClientRect();
+
+      return window.scrollY + rect.top +
+        Math.min(rect.height * 0.35, 260);
+    });
+
+    const anchors = [{
+      x: leftX,
+      y: Math.max(110, stationYs[0] - 120)
+    }];
+
+    sections.forEach((section, index) => {
+      const targetX = index % 2 === 0 ? leftX : rightX;
+      const targetY = stationYs[index];
+      const previous = anchors[anchors.length - 1];
+
+      anchors.push({
+        x: targetX,
+        y: Math.max(previous.y + 35, targetY - 65)
+      });
+
+      anchors.push({
+        x: targetX,
+        y: targetY
+      });
+    });
+
+    const last = anchors[anchors.length - 1];
+
+    anchors.push({
+      x: last.x,
+      y: Math.min(height - 30, last.y + 120)
+    });
+
+    /*
+      Draw rounded turns. The car rotates based on the tangent
+      of this path, rather than being assigned a fixed rotation.
+    */
+    const radius = mobile ? 28 : 46;
+    let d = `M ${anchors[0].x} ${anchors[0].y}`;
+
+    for (let i = 1; i < anchors.length - 1; i++) {
+      const prev = anchors[i - 1];
+      const corner = anchors[i];
+      const next = anchors[i + 1];
+
+      const inX = corner.x - prev.x;
+      const inY = corner.y - prev.y;
+      const outX = next.x - corner.x;
+      const outY = next.y - corner.y;
+
+      const inLength = Math.hypot(inX, inY) || 1;
+      const outLength = Math.hypot(outX, outY) || 1;
+
+      const r1 = Math.min(radius, inLength * 0.42);
+      const r2 = Math.min(radius, outLength * 0.42);
+
+      const beforeX = corner.x - inX / inLength * r1;
+      const beforeY = corner.y - inY / inLength * r1;
+      const afterX = corner.x + outX / outLength * r2;
+      const afterY = corner.y + outY / outLength * r2;
+
+      d += ` L ${beforeX} ${beforeY}`;
+      d += ` Q ${corner.x} ${corner.y} ${afterX} ${afterY}`;
+    }
+
+    d += ` L ${last.x} ${last.y}`;
+
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.style.height = `${height}px`;
+    world.style.height = `${height}px`;
+
+    roadPaths.forEach(path => path.setAttribute("d", d));
+
+    const totalLength = roadSurface.getTotalLength();
+    const sampleCount = Math.max(1800, Math.ceil(totalLength / 1.5));
+
+    points = [];
+
+    for (let i = 0; i <= sampleCount; i++) {
+      const distance = totalLength * i / sampleCount;
+      const p = roadSurface.getPointAtLength(distance);
+
+      points.push({
+        distance,
+        x: p.x,
+        y: p.y
+      });
+    }
+
+    sectionDistances = {};
+
+    sections.forEach((section, index) => {
+      const targetX = index % 2 === 0 ? leftX : rightX;
+      const targetY = stationYs[index];
+
+      let closest = points[0];
+      let bestError = Infinity;
+
+      for (const p of points) {
+        const dx = p.x - targetX;
+        const dy = p.y - targetY;
+        const error = dx * dx + dy * dy;
+
+        if (error < bestError) {
+          bestError = error;
+          closest = p;
+        }
+      }
+
+      sectionDistances[section.id] = closest.distance;
+    });
+
+    markers.replaceChildren();
+
+    sections.forEach((section, index) => {
+      const p = pointAt(sectionDistances[section.id]);
+      const ns = "http://www.w3.org/2000/svg";
+
+      const group = document.createElementNS(ns, "g");
+      const circle = document.createElementNS(ns, "circle");
+      const text = document.createElementNS(ns, "text");
+
+      circle.setAttribute("cx", p.x);
+      circle.setAttribute("cy", p.y);
+      circle.setAttribute("r", mobile ? 9 : 12);
+      circle.setAttribute("class", "road-marker");
+
+      text.setAttribute("x", p.x);
+      text.setAttribute("y", p.y);
+      text.setAttribute("class", "road-marker-text");
+      text.textContent = String(index + 1);
+
+      group.append(circle, text);
+      markers.appendChild(group);
+    });
+
+    currentDistance = Math.min(
+      currentDistance,
+      points[points.length - 1].distance
+    );
+
+    placeCar(currentDistance);
+  }
+
+  /* Find the position and heading of the car along the road. */
+  function pointAt(distance) {
+    if (!points.length) return { x: 43, y: 110, angle: 0 };
+
+    const max = points[points.length - 1].distance;
+    distance = Math.max(0, Math.min(max, distance));
+
+    let low = 0;
+    let high = points.length - 1;
+
+    while (low < high) {
+      const mid = (low + high) >> 1;
+
+      if (points[mid].distance < distance) low = mid + 1;
+      else high = mid;
+    }
+
+    const index = low;
+    const p = points[index];
+    const look = 7;
+
+    const before = points[Math.max(0, index - look)];
+    const after = points[Math.min(points.length - 1, index + look)];
+
+    const angle =
+      Math.atan2(after.y - before.y, after.x - before.x) *
+      180 / Math.PI + 90;
+
+    return { ...p, angle };
+  }
+
+  function placeCar(distance) {
+    if (!points.length) return;
+
+    const p = pointAt(distance);
+    const width = document.documentElement.clientWidth;
+
+    car.style.left = `${p.x}px`;
+    car.style.top = `${p.y}px`;
+    car.style.transform =
+      `translate(-50%, -50%) rotate(${p.angle}deg)`;
+
+    label.style.left = width <= 650
+      ? `${Math.max(5, p.x - 145)}px`
+      : `${p.x + 28}px`;
+
+    label.style.top = `${p.y - 4}px`;
+    label.textContent = names[activeId] || "Your journey";
+    label.classList.add("show");
+
+    currentDistance = distance;
+  }
+
+  function updateActive(id) {
+    activeId = id;
+
+    navLinks.forEach(link => {
+      const active = link.getAttribute("href") === `#${id}`;
+
+      link.classList.toggle("active", active);
+
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+
+    label.textContent = names[id] || id;
+  }
+
+  /* Animate car movement and page scrolling together. */
+  function navigate(id, updateHash = true) {
+    const target = $(id);
+
+    if (!target || sectionDistances[id] == null) return;
+
+    const token = ++navigationToken;
+
+    cancelAnimationFrame(animationFrame);
+    cancelAnimationFrame(scrollFrame);
+
+    isNavigating = true;
+    updateActive(id);
+
+    nav.classList.remove("open");
+    menuToggle.setAttribute("aria-expanded", "false");
+
+    if (updateHash && location.hash !== `#${id}`) {
+      history.pushState({ section: id }, "", `#${id}`);
+    }
+
+    const startDistance = currentDistance;
+    const endDistance = sectionDistances[id];
+    const distanceDelta = endDistance - startDistance;
+
+    const startScroll = window.scrollY;
+    const headerHeight = header.offsetHeight;
+
+    const endScroll = Math.max(
+      0,
+      Math.min(
+        document.documentElement.scrollHeight - window.innerHeight,
+        startScroll +
+          target.getBoundingClientRect().top -
+          headerHeight
+      )
+    );
+
+    const scrollDelta = endScroll - startScroll;
+
+    // Re-enter from the assigned side on each navigation.
+    target.classList.remove("section-arrived");
+
+    if (reduceMotion.matches) {
+      window.scrollTo(0, endScroll);
+      placeCar(endDistance);
+      target.classList.add("section-arrived");
+      isNavigating = false;
+      return;
+    }
+
+    const duration = Math.max(
+      1400,
+      Math.min(4200, Math.abs(distanceDelta) * 0.30)
+    );
+
+    const startTime = performance.now();
+
+    function animate(now) {
+      if (token !== navigationToken) return;
+
+      const progress = Math.min(1, (now - startTime) / duration);
+
+      // Smooth acceleration and deceleration.
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      placeCar(startDistance + distanceDelta * eased);
+      window.scrollTo(0, startScroll + scrollDelta * eased);
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+        return;
+      }
+
+      placeCar(endDistance);
+      window.scrollTo(0, endScroll);
+
+      // Reveal the new page after the car reaches its stop.
+      target.classList.add("section-arrived");
+      isNavigating = false;
+    }
+
+    animationFrame = requestAnimationFrame(animate);
+  }
+
+  /* Menu navigation. */
+  navLinks.forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      navigate(link.getAttribute("href").slice(1));
+    });
+  });
+
+  /* Internal buttons and card links follow the same road. */
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    if (link.closest(".nav-links")) return;
+
+    link.addEventListener("click", event => {
+      const id = link.getAttribute("href").slice(1);
+
+      if (!$(id)) return;
+
+      event.preventDefault();
+      navigate(id);
+    });
+  });
+
+  menuToggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    menuToggle.setAttribute("aria-expanded", String(open));
+  });
+
+  window.addEventListener("popstate", () => {
+    const requested = location.hash.slice(1) || "home";
+    const valid = sections.some(section => section.id === requested);
+
+    navigate(valid ? requested : "home", false);
+  });
+
+  /* Let the car follow the road during manual scrolling. */
+  function trackManualScroll() {
+    if (isNavigating || !points.length) return;
+
+    const referenceY = window.scrollY + window.innerHeight * 0.36;
+
+    let closestPoint = points[0];
+    let pointError = Infinity;
+
+    for (const p of points) {
+      const error = Math.abs(p.y - referenceY);
+
+      if (error < pointError) {
+        pointError = error;
+        closestPoint = p;
+      }
+    }
+
+    placeCar(closestPoint.distance);
+
+    let closestSection = sections[0];
+    let sectionError = Infinity;
+
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const center = window.scrollY + rect.top + rect.height * 0.36;
+      const error = Math.abs(center - referenceY);
+
+      if (error < sectionError) {
+        sectionError = error;
+        closestSection = section;
+      }
+    });
+
+    if (closestSection) {
+      updateActive(closestSection.id);
+      closestSection.classList.add("section-arrived");
+    }
+  }
+
+  window.addEventListener("scroll", () => {
+    if (isNavigating || scrollFrame) return;
+
+    scrollFrame = requestAnimationFrame(() => {
+      trackManualScroll();
+      scrollFrame = 0;
+    });
+  }, { passive: true });
+
+  /* Reveal individual cards and text. */
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(".reveal").forEach(element => {
+    revealObserver.observe(element);
+  });
+
+  /* Demo form: validates locally, but does not send email. */
+  $("contactForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const status = $("formStatus");
+    status.style.color = "#176b45";
+    status.textContent =
+      "Thanks! This demo form is validated. Connect a backend or form service to receive enquiries.";
+
+    form.reset();
+  });
+
+  /* Recalculate the road when the viewport changes. */
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(() => {
+      ++navigationToken;
+      cancelAnimationFrame(animationFrame);
+      isNavigating = false;
+
+      const currentSection = sections.find(section => {
+        const rect = section.getBoundingClientRect();
+
+        return rect.top <= window.innerHeight * 0.4 &&
+               rect.bottom >= window.innerHeight * 0.4;
+      });
+
+      buildRoad();
+
+      if (currentSection &&
+          sectionDistances[currentSection.id] != null) {
+        placeCar(sectionDistances[currentSection.id]);
+      }
+    }, 180);
+  });
+
+  function init() {
+    const hash = location.hash.slice(1);
+
+    const initialId = sections.some(section => section.id === hash)
+      ? hash
+      : "home";
+
+    prepareSectionAnimations(initialId);
+    buildRoad();
+    updateActive(initialId);
+
+    if (initialId !== "home") {
+      const section = $(initialId);
+      const top = window.scrollY +
+        section.getBoundingClientRect().top -
+        header.offsetHeight;
+
+      window.scrollTo(0, Math.max(0, top));
+
+      requestAnimationFrame(() => {
+        buildRoad();
+        placeCar(sectionDistances[initialId] || 0);
+      });
+    } else {
+      placeCar(sectionDistances.home || 0);
+    }
+  }
+
+  if (document.readyState === "complete") {
+    init();
+  } else {
+    window.addEventListener("load", init, { once: true });
+  }
+})();
+</script>
+</body>
+</html>
